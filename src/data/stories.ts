@@ -20,6 +20,7 @@ import rs1 from "@/assets/stories/rain-song/slide1.png";
 import rs2 from "@/assets/stories/rain-song/slide2.png";
 import rs3 from "@/assets/stories/rain-song/slide3.png";
 import rs4 from "@/assets/stories/rain-song/slide4.png";
+import rs5 from "@/assets/stories/rain-song/slide5.png";
 import myFamilyCover from "@/assets/covers/my-family.jpg";
 import colorsCover from "@/assets/covers/colors-around.jpg";
 import myBodyCover from "@/assets/covers/my-body.jpg";
@@ -402,10 +403,11 @@ export const stories: Story[] = [
     minutes: 3,
     tagline: "A joyful monsoon rhyme.",
     pages: [
-      { image: rs1, telugu: "వాన వాన వల్లప్ప, చేయి చాపి పిల్లప్ప.", english: "Rain, rain, dear rain, stretch out your hand." },
-      { image: rs2, telugu: "నీళ్ల చుక్కలు పడుతున్నాయి.", english: "Little drops are falling down." },
-      { image: rs3, telugu: "కప్పలు బెకబెక అంటున్నాయి.", english: "Frogs are singing croak-croak." },
-      { image: rs4, telugu: "పిల్లలంతా గెంతుతున్నారు!", english: "All the children jump and play!" },
+      { image: rs1, telugu: "వాన వాన వల్లప్ప,", english: "Rain, rain, dear rain," },
+      { image: rs2, telugu: "చేయి చాపి పిల్లప్ప.", english: "Stretch out your hand." },
+      { image: rs3, telugu: "నీళ్ల చుక్కలు పడుతున్నాయి.", english: "Little drops are falling down." },
+      { image: rs4, telugu: "కప్పలు బెకబెక అంటున్నాయి.", english: "Frogs are singing croak-croak." },
+      { image: rs5, telugu: "పిల్లలంతా గెంతుతున్నారు!", english: "All the children jump and play!" },
     ],
   },
   {
