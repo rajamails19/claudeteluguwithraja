@@ -8,7 +8,7 @@ import woodcutterCover from "@/assets/covers/woodcutter.jpg";
 import twoFriendsCover from "@/assets/covers/two-friends-bear.jpg";
 import goldenEggCover from "@/assets/covers/golden-egg.jpg";
 import boyWolfCover from "@/assets/covers/boy-wolf.jpg";
-import teluguLettersCover from "@/assets/covers/telugu-letters.jpg";
+import teluguLettersCover from "@/assets/covers/telugu-letters.png";
 import countingFriendsCover from "@/assets/covers/counting-friends.jpg";
 import moonlightRhymesCover from "@/assets/covers/moonlight-rhymes.jpg";
 import mr1 from "@/assets/stories/moonlight-rhymes/slide1.png";
