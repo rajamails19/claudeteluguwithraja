@@ -12,6 +12,14 @@ import teluguLettersCover from "@/assets/covers/telugu-letters.jpg";
 import countingFriendsCover from "@/assets/covers/counting-friends.jpg";
 import moonlightRhymesCover from "@/assets/covers/moonlight-rhymes.jpg";
 import mr1 from "@/assets/stories/moonlight-rhymes/slide1.png";
+import mr2 from "@/assets/stories/moonlight-rhymes/slide2.png";
+import mr3 from "@/assets/stories/moonlight-rhymes/slide3.png";
+import mr4 from "@/assets/stories/moonlight-rhymes/slide4.png";
+import placeholder from "@/assets/placeholder.png";
+import rs1 from "@/assets/stories/rain-song/slide1.png";
+import rs2 from "@/assets/stories/rain-song/slide2.png";
+import rs3 from "@/assets/stories/rain-song/slide3.png";
+import rs4 from "@/assets/stories/rain-song/slide4.png";
 import myFamilyCover from "@/assets/covers/my-family.jpg";
 import colorsCover from "@/assets/covers/colors-around.jpg";
 import myBodyCover from "@/assets/covers/my-body.jpg";
@@ -379,9 +387,9 @@ export const stories: Story[] = [
     tagline: "A soft rhyme for bedtime.",
     pages: [
       { image: mr1, telugu: "చందమామ రావే, జాబిల్లి రావే.", english: "Come, dear moon, come tonight." },
-      { image: "https://loremflickr.com/1200/800/hill,flowers?lock=132", telugu: "కొండెక్కి రావే, కోటి పూలు తేవే.", english: "Climb the hill and bring a million flowers." },
-      { image: "https://loremflickr.com/1200/800/moon,milk?lock=133", telugu: "బంగారు పళ్లెంలో పాలు పోసేవే.", english: "Pour the milk into the golden plate." },
-      { image: "https://loremflickr.com/1200/800/moon,sleep?lock=134", telugu: "నా బాబుకు హాయిగా నిద్ర పుచ్చవే.", english: "And gently send my little one to sleep." },
+      { image: mr2, telugu: "కొండెక్కి రావే, కోటి పూలు తేవే.", english: "Climb the hill and bring a million flowers." },
+      { image: mr3, telugu: "బంగారు పళ్లెంలో పాలు పోసేవే.", english: "Pour the milk into the golden plate." },
+      { image: mr4, telugu: "నా బాబుకు హాయిగా నిద్ర పుచ్చవే.", english: "And gently send my little one to sleep." },
     ],
   },
   {
@@ -394,10 +402,10 @@ export const stories: Story[] = [
     minutes: 3,
     tagline: "A joyful monsoon rhyme.",
     pages: [
-      { image: "https://loremflickr.com/1200/800/rain,monsoon?lock=1101", telugu: "వాన వాన వల్లప్ప, చేయి చాపి పిల్లప్ప.", english: "Rain, rain, dear rain, stretch out your hand." },
-      { image: "https://loremflickr.com/1200/800/raindrops,water?lock=1102", telugu: "నీళ్ల చుక్కలు పడుతున్నాయి.", english: "Little drops are falling down." },
-      { image: "https://loremflickr.com/1200/800/frog,rain?lock=1103", telugu: "కప్పలు బెకబెక అంటున్నాయి.", english: "Frogs are singing croak-croak." },
-      { image: "https://loremflickr.com/1200/800/children,rain?lock=1104", telugu: "పిల్లలంతా గెంతుతున్నారు!", english: "All the children jump and play!" },
+      { image: rs1, telugu: "వాన వాన వల్లప్ప, చేయి చాపి పిల్లప్ప.", english: "Rain, rain, dear rain, stretch out your hand." },
+      { image: rs2, telugu: "నీళ్ల చుక్కలు పడుతున్నాయి.", english: "Little drops are falling down." },
+      { image: rs3, telugu: "కప్పలు బెకబెక అంటున్నాయి.", english: "Frogs are singing croak-croak." },
+      { image: rs4, telugu: "పిల్లలంతా గెంతుతున్నారు!", english: "All the children jump and play!" },
     ],
   },
   {
