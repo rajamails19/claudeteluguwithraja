@@ -5,6 +5,7 @@ import type { Story } from "@/data/stories";
 import { ProgressDots } from "./ProgressDots";
 import { getCachedAudio, putCachedAudio } from "@/lib/ttsCache";
 import { StoryCelebration } from "./StoryCelebration";
+import { MeenuCharacter, type MeenuExpression } from "./MeenuCharacter";
 
 interface Props {
   story: Story | null;
@@ -47,6 +48,16 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
   // Celebration
   const [showCelebration, setShowCelebration] = useState(false);
+
+  // Meenu walking on every page turn
+  const [isPageTurning, setIsPageTurning] = useState(false);
+  const walkTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const triggerWalk = useCallback(() => {
+    setIsPageTurning(true);
+    if (walkTimerRef.current) clearTimeout(walkTimerRef.current);
+    walkTimerRef.current = setTimeout(() => setIsPageTurning(false), 1100);
+  }, []);
 
   useEffect(() => { autoPlayRef.current = autoPlay; }, [autoPlay]);
 
@@ -101,15 +112,17 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
   const next = useCallback(() => {
     stopAudio();
+    triggerWalk();
     setDir(1);
     setPage((p) => Math.min(p + 1, total - 1));
-  }, [total, stopAudio]);
+  }, [total, stopAudio, triggerWalk]);
 
   const prev = useCallback(() => {
     stopAudio();
+    triggerWalk();
     setDir(-1);
     setPage((p) => Math.max(p - 1, 0));
-  }, [stopAudio]);
+  }, [stopAudio, triggerWalk]);
 
   useEffect(() => {
     if (autoPlayRef.current !== "playing") stopAudio();
@@ -124,6 +137,7 @@ export function StoryReaderModal({ story, onClose }: Props) {
       cacheRef.current.clear();
       clearAdvanceTimer();
       clearHighlight();
+      if (walkTimerRef.current) clearTimeout(walkTimerRef.current);
     };
   }, [story?.id, clearAdvanceTimer, clearHighlight]);
 
@@ -219,6 +233,15 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
   if (!story) return null;
   const current = story.pages[page];
+
+  // Decide Meenu's expression based on current state
+  const meenuExpression: MeenuExpression = (() => {
+    if (showCelebration) return "celebrate";
+    if (isPageTurning) return "walking";
+    if (audioState === "playing" || audioState === "loading") return "reading";
+    if (story.id === "moonlight-rhymes" || story.id === "gorumuddha") return "sleepy";
+    return "listening";
+  })();
 
   const playTelugu = async () => {
     if (audioState === "playing") { stopAudio(); return; }
@@ -451,6 +474,11 @@ export function StoryReaderModal({ story, onClose }: Props) {
               <div className="relative h-full w-full flex items-center justify-center">
                 {renderPage(current, true, true)}
               </div>
+            </div>
+
+            {/* Meenu — anchored to the bottom-right of the page area, above controls */}
+            <div className="pointer-events-none absolute bottom-16 right-2 z-10 sm:bottom-20 sm:right-6">
+              <MeenuCharacter expression={meenuExpression} size={150} />
             </div>
 
             {/* Controls */}
