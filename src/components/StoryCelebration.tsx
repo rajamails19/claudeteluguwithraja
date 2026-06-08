@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 interface Props {
   storyTitle: string;
   totalPages: number;
-  onReadAgain: () => void;
-  onClose: () => void;
+  onDone: () => void; // auto-called after 3s → resets to page 1
 }
 
 function FloatingStar({ delay, x, size }: { delay: number; x: number; size: number }) {
@@ -33,13 +32,22 @@ const STARS = Array.from({ length: 16 }, (_, i) => ({
   size: 12 + (i % 4) * 6,
 }));
 
-export function StoryCelebration({ storyTitle, totalPages, onReadAgain, onClose }: Props) {
-  const [show, setShow] = useState(false);
-  useEffect(() => { setShow(true); }, []);
+export function StoryCelebration({ storyTitle, totalPages, onDone }: Props) {
+  const [visible, setVisible] = useState(true);
+
+  // Auto-dismiss after 3 seconds → go back to page 1
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setVisible(false);
+      // small delay for exit animation before resetting
+      setTimeout(onDone, 350);
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [onDone]);
 
   return (
     <AnimatePresence>
-      {show && (
+      {visible && (
         <motion.div
           key="celebration-backdrop"
           initial={{ opacity: 0 }}
@@ -72,14 +80,7 @@ export function StoryCelebration({ storyTitle, totalPages, onReadAgain, onClose 
               backdropFilter: "blur(24px)",
             }}
           >
-            {/* Pulsing glow ring */}
-            <motion.div
-              className="pointer-events-none absolute inset-0 rounded-3xl"
-              animate={{ boxShadow: ["0 0 0px 0px oklch(0.85 0.18 70 / 0.0)", "0 0 40px 8px oklch(0.85 0.18 70 / 0.28)", "0 0 0px 0px oklch(0.85 0.18 70 / 0.0)"] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Trophy icon */}
+            {/* Trophy */}
             <motion.div
               initial={{ scale: 0, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -109,7 +110,6 @@ export function StoryCelebration({ storyTitle, totalPages, onReadAgain, onClose 
               ))}
             </motion.div>
 
-            {/* Headline */}
             <motion.h2
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ export function StoryCelebration({ storyTitle, totalPages, onReadAgain, onClose 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.72 }}
-              className="mb-2 text-xs text-white/70"
+              className="mb-4 text-xs text-white/70"
             >
               {storyTitle}
             </motion.p>
@@ -141,37 +141,22 @@ export function StoryCelebration({ storyTitle, totalPages, onReadAgain, onClose 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8, type: "spring", stiffness: 400, damping: 20 }}
-              className="mx-auto mb-6 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold text-white"
+              className="mx-auto inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold text-white"
               style={{ background: "linear-gradient(90deg, #059669, #10b981)" }}
             >
               <Star className="h-3.5 w-3.5 fill-white text-white" />
               +{totalPages * 10} XP earned
             </motion.div>
 
-            {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.88 }}
-              className="flex flex-col gap-2.5"
+            {/* Auto-dismiss hint */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="mt-4 text-[11px] text-white/40"
             >
-              <button
-                type="button"
-                onClick={onReadAgain}
-                className="w-full rounded-2xl py-3 text-sm font-bold text-white transition-all hover:brightness-110 active:scale-95"
-                style={{ background: "linear-gradient(135deg, #1b5e50, #2d9b83)" }}
-              >
-                🔁 Read Again
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full rounded-2xl py-2.5 text-sm font-medium transition-all hover:bg-white/10 active:scale-95"
-                style={{ color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.18)" }}
-              >
-                Back to Library
-              </button>
-            </motion.div>
+              Starting again in a moment…
+            </motion.p>
           </motion.div>
         </motion.div>
       )}

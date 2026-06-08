@@ -11,15 +11,24 @@ interface Props {
   onClose: () => void;
 }
 
+// Rainbow palette for word highlights
+const RAINBOW = [
+  { bg: "#FF6B6B", text: "#7a0000" },
+  { bg: "#FF9F43", text: "#7a3800" },
+  { bg: "#FECA57", text: "#6b4a00" },
+  { bg: "#48DBFB", text: "#00546b" },
+  { bg: "#A29BFE", text: "#2d006b" },
+  { bg: "#55EFC4", text: "#005a3e" },
+  { bg: "#FD79A8", text: "#6b0030" },
+];
+
 export function StoryReaderModal({ story, onClose }: Props) {
   const [page, setPage] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
   const touchStart = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const cacheRef = useRef<Map<string, string>>(new Map());
-  const [audioState, setAudioState] = useState<"idle" | "loading" | "playing">(
-    "idle",
-  );
+  const [audioState, setAudioState] = useState<"idle" | "loading" | "playing">("idle");
   const [audioError, setAudioError] = useState<string | null>(null);
   const [autoPlay, setAutoPlay] = useState<"off" | "playing" | "paused">("off");
   const autoPlayRef = useRef<"off" | "playing" | "paused">("off");
@@ -28,14 +37,18 @@ export function StoryReaderModal({ story, onClose }: Props) {
   // Word highlight state
   const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
   const highlightRafRef = useRef<number | null>(null);
-  const highlightWordsRef = useRef<string[]>([]);
+  // true when playing a single tapped word — skip highlight
+  const isTapPlayRef = useRef(false);
 
-  // Celebration state
+  // Monkey position (relative to text container)
+  const [monkeyLeft, setMonkeyLeft] = useState<number | null>(null);
+  const wordSpanRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const textContainerRef = useRef<HTMLDivElement>(null);
+
+  // Celebration
   const [showCelebration, setShowCelebration] = useState(false);
 
-  useEffect(() => {
-    autoPlayRef.current = autoPlay;
-  }, [autoPlay]);
+  useEffect(() => { autoPlayRef.current = autoPlay; }, [autoPlay]);
 
   const clearAdvanceTimer = useCallback(() => {
     if (advanceTimerRef.current) {
@@ -50,9 +63,24 @@ export function StoryReaderModal({ story, onClose }: Props) {
       highlightRafRef.current = null;
     }
     setActiveWordIndex(-1);
+    setMonkeyLeft(null);
   }, []);
 
-  // Reset page when story changes
+  // Move monkey to match active word
+  useEffect(() => {
+    if (activeWordIndex < 0 || isTapPlayRef.current) {
+      setMonkeyLeft(null);
+      return;
+    }
+    const span = wordSpanRefs.current[activeWordIndex];
+    const container = textContainerRef.current;
+    if (!span || !container) { setMonkeyLeft(null); return; }
+    const sr = span.getBoundingClientRect();
+    const cr = container.getBoundingClientRect();
+    setMonkeyLeft(sr.left - cr.left + sr.width / 2);
+  }, [activeWordIndex]);
+
+  // Reset when story changes
   useEffect(() => {
     setPage(0);
     setDir(1);
@@ -65,14 +93,10 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
   const stopAudio = useCallback(() => {
     const a = audioRef.current;
-    if (a) {
-      a.pause();
-      a.currentTime = 0;
-      a.onended = null;
-      a.onerror = null;
-    }
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; a.onerror = null; }
     setAudioState("idle");
     clearHighlight();
+    isTapPlayRef.current = false;
   }, [clearHighlight]);
 
   const next = useCallback(() => {
@@ -87,15 +111,11 @@ export function StoryReaderModal({ story, onClose }: Props) {
     setPage((p) => Math.max(p - 1, 0));
   }, [stopAudio]);
 
-  // Stop audio whenever the page changes (covers swipe/keyboard too)
   useEffect(() => {
-    if (autoPlayRef.current !== "playing") {
-      stopAudio();
-    }
+    if (autoPlayRef.current !== "playing") stopAudio();
     setAudioError(null);
   }, [page, stopAudio]);
 
-  // Cleanup audio + blob URLs on unmount / story change
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
@@ -107,7 +127,6 @@ export function StoryReaderModal({ story, onClose }: Props) {
     };
   }, [story?.id, clearAdvanceTimer, clearHighlight]);
 
-  // Keyboard nav + lock scroll
   useEffect(() => {
     if (!story) return;
     const onKey = (e: KeyboardEvent) => {
@@ -125,33 +144,22 @@ export function StoryReaderModal({ story, onClose }: Props) {
   }, [story, next, prev, onClose]);
 
   const startWordHighlight = useCallback((audio: HTMLAudioElement, text: string) => {
+    if (isTapPlayRef.current) return; // no highlight for word taps
     const words = text.split(/\s+/).filter(Boolean);
-    highlightWordsRef.current = words;
     if (words.length === 0) return;
-
     const totalChars = words.reduce((s, w) => s + w.length, 0);
-    // cumulative char counts (end of each word)
     const cumChars: number[] = [];
     let acc = 0;
-    for (const w of words) {
-      acc += w.length;
-      cumChars.push(acc);
-    }
+    for (const w of words) { acc += w.length; cumChars.push(acc); }
 
     const tick = () => {
-      if (!audio || audio.paused || audio.ended) {
-        setActiveWordIndex(-1);
-        return;
-      }
+      if (!audio || audio.paused || audio.ended) { setActiveWordIndex(-1); return; }
       const dur = audio.duration;
       if (dur && dur > 0) {
         const progress = audio.currentTime / dur;
         let idx = words.length - 1;
         for (let i = 0; i < cumChars.length; i++) {
-          if (progress <= cumChars[i] / totalChars) {
-            idx = i;
-            break;
-          }
+          if (progress <= cumChars[i] / totalChars) { idx = i; break; }
         }
         setActiveWordIndex(idx);
       }
@@ -186,11 +194,13 @@ export function StoryReaderModal({ story, onClose }: Props) {
         audio.onended = () => {
           setAudioState("idle");
           clearHighlight();
+          isTapPlayRef.current = false;
           onEnded?.();
         };
         audio.onerror = () => {
           setAudioState("idle");
           clearHighlight();
+          isTapPlayRef.current = false;
           setAudioError("Couldn't play audio.");
         };
         await audio.play();
@@ -200,6 +210,7 @@ export function StoryReaderModal({ story, onClose }: Props) {
         console.error(err);
         setAudioState("idle");
         clearHighlight();
+        isTapPlayRef.current = false;
         setAudioError("Couldn't load audio. Try again.");
       }
     },
@@ -210,52 +221,69 @@ export function StoryReaderModal({ story, onClose }: Props) {
   const current = story.pages[page];
 
   const playTelugu = async () => {
-    if (audioState === "playing") {
-      stopAudio();
-      return;
-    }
+    if (audioState === "playing") { stopAudio(); return; }
+    isTapPlayRef.current = false;
     await playText(current.telugu);
   };
 
-  // Word tap — only when audio is idle
   const handleWordTap = (word: string) => {
     if (audioState !== "idle") return;
+    isTapPlayRef.current = true; // suppress highlight for single-word play
     void playText(word);
   };
 
-  // Render Telugu text as tappable word spans
   const renderTeluguWords = (text: string, isCurrentPage: boolean) => {
     const words = text.split(/\s+/).filter(Boolean);
+    // Reset refs array length
+    wordSpanRefs.current = wordSpanRefs.current.slice(0, words.length);
+
     return (
-      <p className="font-telugu text-2xl leading-snug text-foreground sm:text-[32px]">
-        {words.map((word, i) => {
-          const isActive = isCurrentPage && activeWordIndex === i;
-          return (
-            <span key={i}>
-              <span
-                onClick={() => isCurrentPage && handleWordTap(word)}
-                className="cursor-pointer rounded-md px-0.5 transition-all duration-150"
-                style={
-                  isActive
-                    ? {
-                        background: "oklch(0.88 0.12 80 / 0.85)",
-                        color: "oklch(0.22 0.06 60)",
-                        borderRadius: "6px",
-                        padding: "0 4px",
-                      }
-                    : {
-                        borderRadius: "6px",
-                        padding: "0 4px",
-                      }
-                }
-              >
-                {word}
+      <div ref={isCurrentPage ? textContainerRef : undefined} className="relative inline-block">
+        {/* Monkey mascot */}
+        {isCurrentPage && monkeyLeft !== null && (
+          <motion.div
+            className="pointer-events-none absolute -top-8 z-10 text-2xl"
+            animate={{ left: monkeyLeft - 14 }}
+            transition={{ type: "spring", stiffness: 380, damping: 28 }}
+            style={{ left: monkeyLeft - 14 }}
+          >
+            🐒
+          </motion.div>
+        )}
+
+        <p className="font-telugu text-2xl leading-snug text-foreground sm:text-[32px]">
+          {words.map((word, i) => {
+            const isActive = isCurrentPage && !isTapPlayRef.current && activeWordIndex === i;
+            const color = RAINBOW[i % RAINBOW.length];
+            return (
+              <span key={i}>
+                <span
+                  ref={isCurrentPage ? (el) => { wordSpanRefs.current[i] = el; } : undefined}
+                  onClick={() => isCurrentPage && handleWordTap(word)}
+                  className="cursor-pointer rounded-lg transition-all duration-100"
+                  style={
+                    isActive
+                      ? {
+                          background: color.bg,
+                          color: color.text,
+                          padding: "2px 6px",
+                          borderRadius: "8px",
+                          display: "inline-block",
+                        }
+                      : {
+                          padding: "2px 6px",
+                          display: "inline-block",
+                        }
+                  }
+                >
+                  {word}
+                </span>
+                {i < words.length - 1 ? " " : ""}
               </span>
-              {i < words.length - 1 ? " " : ""}
-            </span>
-          );
-        })}
-      </p>
+            );
+          })}
+        </p>
+      </div>
     );
   };
 
@@ -272,9 +300,7 @@ export function StoryReaderModal({ story, onClose }: Props) {
               type="button"
               onClick={playTelugu}
               disabled={audioState === "loading"}
-              aria-label={
-                audioState === "playing" ? "Stop Telugu audio" : "Play Telugu audio"
-              }
+              aria-label={audioState === "playing" ? "Stop Telugu audio" : "Play Telugu audio"}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft transition-all hover:enabled:brightness-110 disabled:opacity-60"
             >
               {audioState === "loading" ? (
@@ -340,7 +366,8 @@ export function StoryReaderModal({ story, onClose }: Props) {
     setShowCelebration(true);
   };
 
-  const handleReadAgain = () => {
+  // Called after celebration auto-dismisses — go back to page 1
+  const handleCelebrationDone = () => {
     setShowCelebration(false);
     setPage(0);
     setDir(-1);
@@ -398,33 +425,23 @@ export function StoryReaderModal({ story, onClose }: Props) {
                 onClick={handleAutoPlay}
                 className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-medium text-primary-foreground shadow-soft transition-all hover:brightness-110 sm:px-4 sm:text-sm"
                 aria-label={
-                  autoPlay === "playing"
-                    ? "Pause reading"
-                    : autoPlay === "paused"
-                      ? "Resume reading"
-                      : "Read to me"
+                  autoPlay === "playing" ? "Pause reading" : autoPlay === "paused" ? "Resume reading" : "Read to me"
                 }
               >
                 {autoPlay === "playing" ? (
-                  <>
-                    <Pause className="h-3.5 w-3.5" />
-                    <span>Pause</span>
-                  </>
+                  <><Pause className="h-3.5 w-3.5" /><span>Pause</span></>
                 ) : (
-                  <>
-                    <Play className="h-3.5 w-3.5 translate-x-[1px]" />
-                    <span>{autoPlay === "paused" ? "Resume" : "Read to me"}</span>
-                  </>
+                  <><Play className="h-3.5 w-3.5 translate-x-[1px]" /><span>{autoPlay === "paused" ? "Resume" : "Read to me"}</span></>
                 )}
               </button>
               <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close story"
-              className="grid h-10 w-10 place-items-center rounded-full bg-foreground/5 text-foreground/70 transition-colors hover:bg-foreground/10 hover:text-foreground"
-            >
-              <X className="h-5 w-5" />
-            </button>
+                type="button"
+                onClick={onClose}
+                aria-label="Close story"
+                className="grid h-10 w-10 place-items-center rounded-full bg-foreground/5 text-foreground/70 transition-colors hover:bg-foreground/10 hover:text-foreground"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
           </div>
 
@@ -466,13 +483,12 @@ export function StoryReaderModal({ story, onClose }: Props) {
               </button>
             </div>
 
-            {/* Celebration overlay */}
+            {/* Celebration overlay — auto-dismisses after 3s, then resets to page 1 */}
             {showCelebration && (
               <StoryCelebration
                 storyTitle={story.title}
                 totalPages={total}
-                onReadAgain={handleReadAgain}
-                onClose={onClose}
+                onDone={handleCelebrationDone}
               />
             )}
           </div>
