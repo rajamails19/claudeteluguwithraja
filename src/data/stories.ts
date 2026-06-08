@@ -8,6 +8,17 @@ import woodcutterCover from "@/assets/covers/woodcutter.jpg";
 import twoFriendsCover from "@/assets/covers/two-friends-bear.jpg";
 import goldenEggCover from "@/assets/covers/golden-egg.jpg";
 import boyWolfCover from "@/assets/covers/boy-wolf.jpg";
+import greedyDogCover from "@/assets/covers/greedy-dog.jpg";
+import kindElephantCover from "@/assets/covers/kind-elephant.jpg";
+import foxGrapesCover from "@/assets/covers/fox-grapes.jpg";
+import antGrasshopperCover from "@/assets/covers/ant-grasshopper.jpg";
+import monkeyCrocodileCover from "@/assets/covers/monkey-crocodile.jpg";
+import littleStarCover from "@/assets/covers/little-star.jpg";
+import uglyDucklingCover from "@/assets/covers/ugly-duckling.jpg";
+import magicPotCover from "@/assets/covers/magic-pot.jpg";
+import sunWindCover from "@/assets/covers/sun-wind.jpg";
+import rainbowCover from "@/assets/covers/rainbow.jpg";
+import twoCatsMonkeyCover from "@/assets/covers/two-cats-monkey.jpg";
 import teluguLettersCover from "@/assets/covers/telugu-letters.png";
 import countingFriendsCover from "@/assets/covers/counting-friends.jpg";
 import moonlightRhymesCover from "@/assets/covers/moonlight-rhymes.jpg";
@@ -264,6 +275,206 @@ export const stories: Story[] = [
       { image: bw3, telugu: "తోడేలు లేదు — గ్రామస్థులు తిరిగి వెళ్లారు. బాలుడు నవ్వాడు.", english: "No wolf — villagers went back. The boy laughed." },
       { image: "https://loremflickr.com/1200/800/wolf,field?lock=601", telugu: "ఒక రోజు నిజంగా తోడేలు వచ్చింది. బాలుడు అరిచాడు, కానీ ఎవరూ నమ్మలేదు.", english: "One day a real wolf came. The boy shouted, but nobody believed him." },
       { image: "https://loremflickr.com/1200/800/sheep,sad?lock=602", telugu: "తోడేలు గొర్రెలను తీసుకుపోయింది.", english: "The wolf took the sheep away." },
+    ],
+  },
+
+  {
+    id: "greedy-dog",
+    title: "The Greedy Dog",
+    teluguTitle: "అత్యాశ కుక్క",
+    cover: greedyDogCover,
+    category: "Moral Stories",
+    age: "4–6",
+    minutes: 3,
+    tagline: "Greed makes you lose what you already have.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,dog,cute?lock=2001", telugu: "కుక్కకు ఎముక దొరికింది.", english: "A dog found a bone." },
+      { image: "https://loremflickr.com/1200/800/cartoon,dog,walking?lock=2002", telugu: "అది సంతోషంగా నడిచింది.", english: "It walked away happily." },
+      { image: "https://loremflickr.com/1200/800/cartoon,bridge,river?lock=2003", telugu: "వంతెన మీద నీడ కనిపించింది.", english: "It saw a shadow below." },
+      { image: "https://loremflickr.com/1200/800/cartoon,dog,surprise?lock=2004", telugu: "అది మరో కుక్క అనుకుంది!", english: "It thought — another dog!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,dog,barking?lock=2005", telugu: "మొరిగింది — ఎముక పడింది!", english: "It barked — bone fell down!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,sad,dog?lock=2006", telugu: "అత్యాశ చెడు చేసింది.", english: "Greed caused the loss." },
+    ],
+  },
+
+  // ─────────── ANIMAL STORIES (new) ───────────
+  {
+    id: "kind-elephant",
+    title: "The Kind Elephant",
+    teluguTitle: "మంచి ఏనుగు",
+    cover: kindElephantCover,
+    category: "Animal Stories",
+    age: "3–5",
+    minutes: 3,
+    tagline: "Kindness makes everyone smile.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,elephant,cute?lock=3001", telugu: "ఒక పెద్ద ఏనుగు ఉంది.", english: "There lived a big elephant." },
+      { image: "https://loremflickr.com/1200/800/cartoon,elephant,forest?lock=3002", telugu: "అది అందరికీ సహాయం చేసింది.", english: "It helped everyone always." },
+      { image: "https://loremflickr.com/1200/800/cartoon,bird,falling?lock=3003", telugu: "చిన్న పక్షి పడిపోయింది.", english: "A little bird fell down." },
+      { image: "https://loremflickr.com/1200/800/cartoon,elephant,rescue?lock=3004", telugu: "ఏనుగు దాన్ని లేపింది.", english: "Elephant lifted it gently." },
+      { image: "https://loremflickr.com/1200/800/cartoon,bird,singing,happy?lock=3005", telugu: "పక్షి పాట పాడింది!", english: "The bird sang with joy!" },
+    ],
+  },
+  {
+    id: "fox-grapes",
+    title: "The Fox and the Grapes",
+    teluguTitle: "నక్క మరియు పండ్లు",
+    cover: foxGrapesCover,
+    category: "Animal Stories",
+    age: "4–6",
+    minutes: 3,
+    tagline: "Don't make excuses — try your best.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,fox,cute?lock=3101", telugu: "నక్కకు పండ్లు కనిపించాయి.", english: "Fox saw some grapes." },
+      { image: "https://loremflickr.com/1200/800/cartoon,fox,jumping?lock=3102", telugu: "అది పైకి దుమికింది.", english: "It jumped up high." },
+      { image: "https://loremflickr.com/1200/800/cartoon,fox,trying?lock=3103", telugu: "మళ్ళీ మళ్ళీ దుమికింది.", english: "It jumped again, again." },
+      { image: "https://loremflickr.com/1200/800/cartoon,fox,sad?lock=3104", telugu: "పండ్లు అందలేదు.", english: "Could not reach the grapes." },
+      { image: "https://loremflickr.com/1200/800/cartoon,fox,walking?lock=3105", telugu: '"పుల్లగా ఉంటాయి!" అంది.', english: '"They must be sour!" it said.' },
+    ],
+  },
+  {
+    id: "monkey-crocodile",
+    title: "The Monkey and the Crocodile",
+    teluguTitle: "కోతి మరియు మొసలి",
+    cover: monkeyCrocodileCover,
+    category: "Animal Stories",
+    age: "5–7",
+    minutes: 4,
+    tagline: "Stay clever and stay safe.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,tree?lock=3201", telugu: "కోతి చెట్టుపై ఉంది.", english: "Monkey lived on a tree." },
+      { image: "https://loremflickr.com/1200/800/cartoon,crocodile,river?lock=3202", telugu: "మొసలి స్నేహితుడయ్యాడు.", english: "Crocodile became its friend." },
+      { image: "https://loremflickr.com/1200/800/cartoon,crocodile,sneaky?lock=3203", telugu: "మొసలి కోతిని తీసుకెళ్ళాలనుకుంది.", english: "Crocodile planned to trick it." },
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,smart?lock=3204", telugu: '"నా గుండె చెట్టుపై ఉంది!"', english: '"My heart is on the tree!"' },
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,running?lock=3205", telugu: "కోతి వేగంగా పారిపోయింది.", english: "Monkey quickly ran away." },
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,safe,happy?lock=3206", telugu: "తెలివి ప్రాణం కాపాడింది.", english: "Wit saved its life." },
+    ],
+  },
+  {
+    id: "ugly-duckling",
+    title: "The Ugly Duckling",
+    teluguTitle: "వేరే బాతు పిల్ల",
+    cover: uglyDucklingCover,
+    category: "Animal Stories",
+    age: "4–6",
+    minutes: 4,
+    tagline: "You are beautiful just as you are.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,egg,nest?lock=3301", telugu: "ఒక పెద్ద గుడ్డు పగిలింది.", english: "A big egg cracked open." },
+      { image: "https://loremflickr.com/1200/800/cartoon,duckling,different?lock=3302", telugu: "పిల్ల వేరేగా కనిపించింది.", english: "The duckling looked different." },
+      { image: "https://loremflickr.com/1200/800/cartoon,ducks,laughing?lock=3303", telugu: "అందరూ నవ్వారు.", english: "Everyone laughed at it." },
+      { image: "https://loremflickr.com/1200/800/cartoon,duckling,sad?lock=3304", telugu: "అది చాలా విచారించింది.", english: "It felt very sad." },
+      { image: "https://loremflickr.com/1200/800/cartoon,swan,beautiful?lock=3305", telugu: "పెద్దయ్యాక హంస అయింది!", english: "It grew into a swan!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,swan,happy?lock=3306", telugu: "అందరూ మెచ్చుకున్నారు!", english: "Everyone admired it!" },
+    ],
+  },
+  {
+    id: "two-cats-monkey",
+    title: "Two Cats and a Monkey",
+    teluguTitle: "రెండు పిల్లులు కోతి",
+    cover: twoCatsMonkeyCover,
+    category: "Animal Stories",
+    age: "5–7",
+    minutes: 3,
+    tagline: "Fighting always helps someone else.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,two,cats?lock=3401", telugu: "రెండు పిల్లులు గొడవ పడ్డాయి.", english: "Two cats were fighting." },
+      { image: "https://loremflickr.com/1200/800/cartoon,bread,food?lock=3402", telugu: "రొట్టె కోసం తగువు.", english: "They fought over bread." },
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,judge?lock=3403", telugu: "కోతి న్యాయం చెప్పింది.", english: "Monkey said it would help." },
+      { image: "https://loremflickr.com/1200/800/cartoon,monkey,eating?lock=3404", telugu: "కోతి రొట్టె తినేసింది!", english: "Monkey ate all the bread!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,cats,shocked?lock=3405", telugu: "గొడవ పడితే నష్టం.", english: "Fighting brings only loss." },
+    ],
+  },
+
+  // ─────────── MORAL STORIES (new) ───────────
+  {
+    id: "ant-grasshopper",
+    title: "The Ant and the Grasshopper",
+    teluguTitle: "చీమ మరియు మిడత",
+    cover: antGrasshopperCover,
+    category: "Moral Stories",
+    age: "5–7",
+    minutes: 4,
+    tagline: "Work today, rest tomorrow.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,ant,working?lock=3501", telugu: "చీమ రోజూ పని చేసింది.", english: "Ant worked every single day." },
+      { image: "https://loremflickr.com/1200/800/cartoon,grasshopper,singing?lock=3502", telugu: "మిడత పాటలు పాడింది.", english: "Grasshopper sang and played." },
+      { image: "https://loremflickr.com/1200/800/cartoon,snow,winter?lock=3503", telugu: "చలి కాలం వచ్చింది.", english: "Winter came at last." },
+      { image: "https://loremflickr.com/1200/800/cartoon,grasshopper,hungry?lock=3504", telugu: "మిడతకు తిండి లేదు.", english: "Grasshopper had no food." },
+      { image: "https://loremflickr.com/1200/800/cartoon,ant,food,stored?lock=3505", telugu: "చీమ దగ్గర తిండి ఉంది.", english: "Ant had food stored safe." },
+      { image: "https://loremflickr.com/1200/800/cartoon,ant,lesson?lock=3506", telugu: "కష్టం ఫలితం ఇస్తుంది.", english: "Hard work always pays off." },
+    ],
+  },
+  {
+    id: "magic-pot",
+    title: "The Magic Pot",
+    teluguTitle: "మంత్ర కుండ",
+    cover: magicPotCover,
+    category: "Moral Stories",
+    age: "5–7",
+    minutes: 3,
+    tagline: "Be careful with magic gifts.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,girl,pot?lock=3601", telugu: "అమ్మాయికి కుండ దొరికింది.", english: "A girl found a magic pot." },
+      { image: "https://loremflickr.com/1200/800/cartoon,pot,cooking,magic?lock=3602", telugu: "కుండ వంట చేసింది!", english: "The pot cooked by itself!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,girl,food,happy?lock=3603", telugu: '"ఆగు కుండా!" అంటే ఆగింది.', english: '"Stop, pot!" — it stopped.' },
+      { image: "https://loremflickr.com/1200/800/cartoon,pot,overflow,food?lock=3604", telugu: "ఒకరోజు మాట మర్చింది.", english: "One day she forgot the words." },
+      { image: "https://loremflickr.com/1200/800/cartoon,village,food,everywhere?lock=3605", telugu: "ఊరంతా అన్నం నిండింది!", english: "Food flooded the whole village!" },
+    ],
+  },
+  {
+    id: "sun-wind",
+    title: "The Sun and the Wind",
+    teluguTitle: "సూర్యుడు మరియు గాలి",
+    cover: sunWindCover,
+    category: "Moral Stories",
+    age: "4–6",
+    minutes: 3,
+    tagline: "Kindness is stronger than force.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,sun,wind?lock=3701", telugu: "సూర్యుడు, గాలి పోటీ పడ్డారు.", english: "Sun and wind had a contest." },
+      { image: "https://loremflickr.com/1200/800/cartoon,traveller,coat?lock=3702", telugu: "కోటు తీయించాలి!", english: "Make him remove his coat!" },
+      { image: "https://loremflickr.com/1200/800/cartoon,wind,blowing,strong?lock=3703", telugu: "గాలి గట్టిగా వీచింది.", english: "Wind blew very, very hard." },
+      { image: "https://loremflickr.com/1200/800/cartoon,man,holding,coat?lock=3704", telugu: "మనిషి కోటు పట్టుకున్నాడు.", english: "The man held his coat tight." },
+      { image: "https://loremflickr.com/1200/800/cartoon,sun,warm,shining?lock=3705", telugu: "సూర్యుడు వెచ్చగా నవ్వాడు.", english: "Sun smiled warm and bright." },
+      { image: "https://loremflickr.com/1200/800/cartoon,man,coat,off?lock=3706", telugu: "మనిషి కోటు తీశాడు!", english: "The man took his coat off!" },
+    ],
+  },
+
+  // ─────────── RHYMES (new) ───────────
+  {
+    id: "little-star",
+    title: "Little Star",
+    teluguTitle: "చిన్న నక్షత్రం",
+    cover: littleStarCover,
+    category: "Rhymes",
+    age: "3–5",
+    minutes: 2,
+    tagline: "A soft bedtime rhyme.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,star,night,cute?lock=3801", telugu: "చిన్న నక్షత్రం మెరిసింది.", english: "Little star began to shine." },
+      { image: "https://loremflickr.com/1200/800/cartoon,stars,sky,twinkle?lock=3802", telugu: "రాత్రి ఆకాశం వెలిగింది.", english: "Night sky lit up bright." },
+      { image: "https://loremflickr.com/1200/800/cartoon,star,child,looking?lock=3803", telugu: "పిల్లలు పైకి చూశారు.", english: "Children looked up with wonder." },
+      { image: "https://loremflickr.com/1200/800/cartoon,child,sleeping,moon?lock=3804", telugu: "నక్షత్రం పాట పాడింది.", english: "The star sang them a song." },
+      { image: "https://loremflickr.com/1200/800/cartoon,child,sleeping,peaceful?lock=3805", telugu: "నిద్రపో చిన్నారీ!", english: "Sleep well, little one!" },
+    ],
+  },
+
+  // ─────────── BEGINNER TELUGU (new) ───────────
+  {
+    id: "rainbow",
+    title: "The Rainbow",
+    teluguTitle: "రంగుల వంపు",
+    cover: rainbowCover,
+    category: "Beginner Telugu",
+    age: "3–5",
+    minutes: 2,
+    tagline: "Colors of the sky.",
+    pages: [
+      { image: "https://loremflickr.com/1200/800/cartoon,rain,clouds?lock=3901", telugu: "వర్షం పడింది.", english: "The rain came down." },
+      { image: "https://loremflickr.com/1200/800/cartoon,rainbow,sky?lock=3902", telugu: "ఆకాశంలో రంగులు వచ్చాయి.", english: "Colors filled the sky." },
+      { image: "https://loremflickr.com/1200/800/cartoon,rainbow,colorful?lock=3903", telugu: "ఎరుపు, పచ్చ, నీలం.", english: "Red, green and blue." },
+      { image: "https://loremflickr.com/1200/800/cartoon,children,rainbow,happy?lock=3904", telugu: "పిల్లలు సంతోషించారు!", english: "The children were so happy!" },
     ],
   },
 
