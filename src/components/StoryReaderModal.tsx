@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Loader2, Pause, Play, X } from "lucide-react
 import type { Story } from "@/data/stories";
 import { ProgressDots } from "./ProgressDots";
 import { getCachedAudio, putCachedAudio } from "@/lib/ttsCache";
+import { StoryCelebration } from "./StoryCelebration";
 
 interface Props {
   story: Story | null;
@@ -24,6 +25,14 @@ export function StoryReaderModal({ story, onClose }: Props) {
   const autoPlayRef = useRef<"off" | "playing" | "paused">("off");
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Word highlight state
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
+  const highlightRafRef = useRef<number | null>(null);
+  const highlightWordsRef = useRef<string[]>([]);
+
+  // Celebration state
+  const [showCelebration, setShowCelebration] = useState(false);
+
   useEffect(() => {
     autoPlayRef.current = autoPlay;
   }, [autoPlay]);
@@ -35,11 +44,20 @@ export function StoryReaderModal({ story, onClose }: Props) {
     }
   }, []);
 
+  const clearHighlight = useCallback(() => {
+    if (highlightRafRef.current !== null) {
+      cancelAnimationFrame(highlightRafRef.current);
+      highlightRafRef.current = null;
+    }
+    setActiveWordIndex(-1);
+  }, []);
+
   // Reset page when story changes
   useEffect(() => {
     setPage(0);
     setDir(1);
     setAutoPlay("off");
+    setShowCelebration(false);
     clearAdvanceTimer();
   }, [story?.id, clearAdvanceTimer]);
 
@@ -54,7 +72,8 @@ export function StoryReaderModal({ story, onClose }: Props) {
       a.onerror = null;
     }
     setAudioState("idle");
-  }, []);
+    clearHighlight();
+  }, [clearHighlight]);
 
   const next = useCallback(() => {
     stopAudio();
@@ -84,8 +103,9 @@ export function StoryReaderModal({ story, onClose }: Props) {
       cacheRef.current.forEach((url) => URL.revokeObjectURL(url));
       cacheRef.current.clear();
       clearAdvanceTimer();
+      clearHighlight();
     };
-  }, [story?.id, clearAdvanceTimer]);
+  }, [story?.id, clearAdvanceTimer, clearHighlight]);
 
   // Keyboard nav + lock scroll
   useEffect(() => {
@@ -103,6 +123,42 @@ export function StoryReaderModal({ story, onClose }: Props) {
       document.body.style.overflow = prevOverflow;
     };
   }, [story, next, prev, onClose]);
+
+  const startWordHighlight = useCallback((audio: HTMLAudioElement, text: string) => {
+    const words = text.split(/\s+/).filter(Boolean);
+    highlightWordsRef.current = words;
+    if (words.length === 0) return;
+
+    const totalChars = words.reduce((s, w) => s + w.length, 0);
+    // cumulative char counts (end of each word)
+    const cumChars: number[] = [];
+    let acc = 0;
+    for (const w of words) {
+      acc += w.length;
+      cumChars.push(acc);
+    }
+
+    const tick = () => {
+      if (!audio || audio.paused || audio.ended) {
+        setActiveWordIndex(-1);
+        return;
+      }
+      const dur = audio.duration;
+      if (dur && dur > 0) {
+        const progress = audio.currentTime / dur;
+        let idx = words.length - 1;
+        for (let i = 0; i < cumChars.length; i++) {
+          if (progress <= cumChars[i] / totalChars) {
+            idx = i;
+            break;
+          }
+        }
+        setActiveWordIndex(idx);
+      }
+      highlightRafRef.current = requestAnimationFrame(tick);
+    };
+    highlightRafRef.current = requestAnimationFrame(tick);
+  }, []);
 
   const playText = useCallback(
     async (text: string, onEnded?: () => void) => {
@@ -129,36 +185,88 @@ export function StoryReaderModal({ story, onClose }: Props) {
         audioRef.current = audio;
         audio.onended = () => {
           setAudioState("idle");
+          clearHighlight();
           onEnded?.();
         };
         audio.onerror = () => {
           setAudioState("idle");
+          clearHighlight();
           setAudioError("Couldn't play audio.");
         };
         await audio.play();
         setAudioState("playing");
+        startWordHighlight(audio, text);
       } catch (err) {
         console.error(err);
         setAudioState("idle");
+        clearHighlight();
         setAudioError("Couldn't load audio. Try again.");
       }
     },
-    [],
+    [startWordHighlight, clearHighlight],
   );
 
   if (!story) return null;
   const current = story.pages[page];
 
-  const renderPage = (p: { telugu: string; english: string; image: string }, withButton: boolean) => (
+  const playTelugu = async () => {
+    if (audioState === "playing") {
+      stopAudio();
+      return;
+    }
+    await playText(current.telugu);
+  };
+
+  // Word tap — only when audio is idle
+  const handleWordTap = (word: string) => {
+    if (audioState !== "idle") return;
+    void playText(word);
+  };
+
+  // Render Telugu text as tappable word spans
+  const renderTeluguWords = (text: string, isCurrentPage: boolean) => {
+    const words = text.split(/\s+/).filter(Boolean);
+    return (
+      <p className="font-telugu text-2xl leading-snug text-foreground sm:text-[32px]">
+        {words.map((word, i) => {
+          const isActive = isCurrentPage && activeWordIndex === i;
+          return (
+            <span key={i}>
+              <span
+                onClick={() => isCurrentPage && handleWordTap(word)}
+                className="cursor-pointer rounded-md px-0.5 transition-all duration-150"
+                style={
+                  isActive
+                    ? {
+                        background: "oklch(0.88 0.12 80 / 0.85)",
+                        color: "oklch(0.22 0.06 60)",
+                        borderRadius: "6px",
+                        padding: "0 4px",
+                      }
+                    : {
+                        borderRadius: "6px",
+                        padding: "0 4px",
+                      }
+                }
+              >
+                {word}
+              </span>
+              {i < words.length - 1 ? " " : ""}
+            </span>
+          );
+        })}
+      </p>
+    );
+  };
+
+  const renderPage = (p: { telugu: string; english: string; image: string }, withButton: boolean, isCurrentPage = false) => (
     <div className="flex h-full w-full max-w-6xl flex-col items-center">
       <div className="relative w-full flex-1 overflow-hidden rounded-2xl bg-paper shadow-book">
         <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
       </div>
       <div className="mt-5 max-w-3xl text-center sm:mt-7">
         <div className="flex items-center justify-center gap-3">
-          <p className="font-telugu text-2xl leading-snug text-foreground sm:text-[32px]">
-            {p.telugu}
-          </p>
+          {renderTeluguWords(p.telugu, isCurrentPage)}
           {withButton && (
             <button
               type="button"
@@ -189,14 +297,6 @@ export function StoryReaderModal({ story, onClose }: Props) {
     </div>
   );
 
-  const playTelugu = async () => {
-    if (audioState === "playing") {
-      stopAudio();
-      return;
-    }
-    await playText(current.telugu);
-  };
-
   const playAutoForPage = (pageIndex: number) => {
     const text = story.pages[pageIndex].telugu;
     void playText(text, () => {
@@ -205,11 +305,10 @@ export function StoryReaderModal({ story, onClose }: Props) {
       const isLast = pageIndex >= total - 1;
       if (isLast) {
         advanceTimerRef.current = setTimeout(() => {
-          setDir(-1);
-          setPage(0);
           setAutoPlay("off");
           autoPlayRef.current = "off";
-        }, 1000);
+          setShowCelebration(true);
+        }, 800);
         return;
       }
       advanceTimerRef.current = setTimeout(() => {
@@ -224,18 +323,31 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
   const handleAutoPlay = () => {
     if (autoPlay === "playing") {
-      // Pause
       setAutoPlay("paused");
       autoPlayRef.current = "paused";
       clearAdvanceTimer();
       stopAudio();
     } else {
-      // Start or Resume
       setAutoPlay("playing");
       autoPlayRef.current = "playing";
       stopAudio();
       playAutoForPage(page);
     }
+  };
+
+  const handleTheEnd = () => {
+    stopAudio();
+    setShowCelebration(true);
+  };
+
+  const handleReadAgain = () => {
+    setShowCelebration(false);
+    setPage(0);
+    setDir(-1);
+    setAutoPlay("off");
+    autoPlayRef.current = "off";
+    clearAdvanceTimer();
+    stopAudio();
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -320,7 +432,7 @@ export function StoryReaderModal({ story, onClose }: Props) {
           <div className="relative flex flex-1 flex-col overflow-hidden">
             <div className="relative flex flex-1 items-center justify-center overflow-hidden px-3 pt-4 pb-2 sm:px-10 sm:pt-8">
               <div className="relative h-full w-full flex items-center justify-center">
-                {renderPage(current, true)}
+                {renderPage(current, true, true)}
               </div>
             </div>
 
@@ -343,15 +455,26 @@ export function StoryReaderModal({ story, onClose }: Props) {
 
               <button
                 type="button"
-                onClick={next}
-                disabled={page >= total - 1}
-                className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:brightness-110"
-                aria-label="Next page"
+                onClick={page >= total - 1 ? handleTheEnd : next}
+                className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:brightness-110"
+                aria-label={page >= total - 1 ? "Finish story" : "Next page"}
               >
-                <span>{page >= total - 1 ? "The End" : "Next"}</span>
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:enabled:translate-x-0.5" />
+                <span>{page >= total - 1 ? "The End ✨" : "Next"}</span>
+                {page < total - 1 && (
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                )}
               </button>
             </div>
+
+            {/* Celebration overlay */}
+            {showCelebration && (
+              <StoryCelebration
+                storyTitle={story.title}
+                totalPages={total}
+                onReadAgain={handleReadAgain}
+                onClose={onClose}
+              />
+            )}
           </div>
         </motion.div>
       </motion.div>
