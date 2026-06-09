@@ -311,11 +311,20 @@ export function StoryReaderModal({ story, onClose }: Props) {
   };
 
   const renderPage = (p: { telugu: string; english: string; image: string }, withButton: boolean, isCurrentPage = false) => (
-    <div className="flex h-full w-full max-w-6xl flex-col items-center">
-      <div className="relative w-full flex-1 overflow-hidden rounded-2xl bg-paper shadow-book">
-        <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+    <div className="flex w-full max-w-6xl flex-col items-center">
+      {/* Image */}
+      <div className="relative w-full h-[42vh] sm:h-[52vh]">
+        <div className="absolute inset-0 overflow-hidden rounded-2xl bg-paper shadow-book">
+          <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        </div>
+        {/* Meenu — 3/4 inside image, 1/4 peeking out */}
+        {isCurrentPage && (
+          <div className="pointer-events-none absolute bottom-0 right-3 z-10 translate-y-1/4">
+            <MeenuCharacter expression={meenuExpression} size={120} />
+          </div>
+        )}
       </div>
-      <div className="mt-5 max-w-3xl text-center sm:mt-7">
+      <div className="mt-4 w-full max-w-3xl text-center sm:mt-6">
         <div className="flex items-center justify-center gap-3">
           {renderTeluguWords(p.telugu, isCurrentPage)}
           {withButton && (
@@ -469,16 +478,11 @@ export function StoryReaderModal({ story, onClose }: Props) {
           </div>
 
           {/* Page */}
-          <div className="relative flex flex-1 flex-col overflow-hidden">
-            <div className="relative flex flex-1 items-center justify-center overflow-hidden px-3 pt-4 pb-2 sm:px-10 sm:pt-8">
-              <div className="relative h-full w-full flex items-center justify-center">
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            <div className="flex flex-col items-center px-3 pt-4 pb-2 sm:px-10 sm:pt-6">
+              <div className="w-full flex items-center justify-center">
                 {renderPage(current, true, true)}
               </div>
-            </div>
-
-            {/* Meenu — anchored to the bottom-right of the page area, above controls */}
-            <div className="pointer-events-none absolute bottom-16 right-2 z-10 sm:bottom-20 sm:right-6">
-              <MeenuCharacter expression={meenuExpression} size={150} />
             </div>
 
             {/* Controls */}
