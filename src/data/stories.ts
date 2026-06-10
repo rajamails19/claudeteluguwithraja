@@ -10,6 +10,11 @@ import goldenEggCover from "@/assets/covers/golden-egg.jpg";
 import boyWolfCover from "@/assets/covers/boy-wolf.jpg";
 import greedyDogCover from "@/assets/covers/greedy-dog.jpg";
 import kindElephantCover from "@/assets/covers/kind-elephant.jpg";
+import ke1 from "@/assets/stories/kind-elephant/slide1.png";
+import ke2 from "@/assets/stories/kind-elephant/slide2.png";
+import ke3 from "@/assets/stories/kind-elephant/slide3.png";
+import ke4 from "@/assets/stories/kind-elephant/slide4.png";
+import ke5 from "@/assets/stories/kind-elephant/slide5.png";
 import foxGrapesCover from "@/assets/covers/fox-grapes.jpg";
 import antGrasshopperCover from "@/assets/covers/ant-grasshopper.jpg";
 import monkeyCrocodileCover from "@/assets/covers/monkey-crocodile.jpg";
@@ -22,6 +27,10 @@ import twoCatsMonkeyCover from "@/assets/covers/two-cats-monkey.jpg";
 import teluguLettersCover from "@/assets/covers/telugu-letters.png";
 import countingFriendsCover from "@/assets/covers/counting-friends.jpg";
 import moonlightRhymesCover from "@/assets/covers/moonlight-rhymes.jpg";
+import gorumuddahCover from "@/assets/covers/gorumuddha-cover.jpg";
+import balabaluCover from "@/assets/covers/bala-balu-cover.jpg";
+import raaraKrishnaCover from "@/assets/covers/raara-krishna-cover.jpg";
+// import balabaluCover from "@/assets/covers/bala-balu-cover.jpg";
 import mr1 from "@/assets/stories/moonlight-rhymes/slide1.png";
 import mr2 from "@/assets/stories/moonlight-rhymes/slide2.png";
 import mr3 from "@/assets/stories/moonlight-rhymes/slide3.png";
@@ -308,11 +317,11 @@ export const stories: Story[] = [
     minutes: 3,
     tagline: "Kindness makes everyone smile.",
     pages: [
-      { image: "https://loremflickr.com/1200/800/cartoon,elephant,cute?lock=3001", telugu: "ఒక పెద్ద ఏనుగు ఉంది.", english: "There lived a big elephant." },
-      { image: "https://loremflickr.com/1200/800/cartoon,elephant,forest?lock=3002", telugu: "అది అందరికీ సహాయం చేసింది.", english: "It helped everyone always." },
-      { image: "https://loremflickr.com/1200/800/cartoon,bird,falling?lock=3003", telugu: "చిన్న పక్షి పడిపోయింది.", english: "A little bird fell down." },
-      { image: "https://loremflickr.com/1200/800/cartoon,elephant,rescue?lock=3004", telugu: "ఏనుగు దాన్ని లేపింది.", english: "Elephant lifted it gently." },
-      { image: "https://loremflickr.com/1200/800/cartoon,bird,singing,happy?lock=3005", telugu: "పక్షి పాట పాడింది!", english: "The bird sang with joy!" },
+      { image: ke1, telugu: "ఒక పెద్ద ఏనుగు ఉంది.", english: "There lived a big elephant." },
+      { image: ke2, telugu: "అది అందరికీ సహాయం చేసింది.", english: "It helped everyone always." },
+      { image: ke3, telugu: "చిన్న పక్షి పడిపోయింది.", english: "A little bird fell down." },
+      { image: ke4, telugu: "ఏనుగు దాన్ని లేపింది.", english: "Elephant lifted it gently." },
+      { image: ke5, telugu: "పక్షి పాట పాడింది!", english: "The bird sang with joy!" },
     ],
   },
   {
@@ -625,7 +634,7 @@ export const stories: Story[] = [
     id: "gorumuddha",
     title: "Gorumuddha",
     teluguTitle: "గోరుముద్ద",
-    cover: "https://loremflickr.com/600/400/mother,child,india,cartoon?lock=2001",
+    cover: gorumuddahCover,
     category: "Rhymes",
     age: "3–5",
     minutes: 2,
@@ -641,7 +650,7 @@ export const stories: Story[] = [
     id: "raara-krishna",
     title: "Raara Chinna Krishna",
     teluguTitle: "రారా చిన్ని కృష్ణా",
-    cover: "https://loremflickr.com/600/400/krishna,flute,cartoon?lock=2010",
+    cover: raaraKrishnaCover,
     category: "Rhymes",
     age: "3–6",
     minutes: 3,
@@ -657,7 +666,7 @@ export const stories: Story[] = [
     id: "bala-balu",
     title: "Bala Balu",
     teluguTitle: "బాలా బాలూ",
-    cover: "https://loremflickr.com/600/400/children,play,india,cartoon?lock=2020",
+    cover: balabaluCover,
     category: "Rhymes",
     age: "3–5",
     minutes: 2,
